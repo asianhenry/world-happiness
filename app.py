@@ -11,16 +11,16 @@ from flask import Flask, jsonify, render_template
 #################################################
 # Database Setup
 #################################################
-engine = create_engine("sqlite:///Data/happiness.sqlite")
-conn = engine.connect()
-session = Session(engine)
-# reflect an existing database into a new model
-Base = automap_base()
-# reflect the tables
-Base.prepare(engine, reflect=True)
+from flask_sqlalchemy import SQLAlchemy
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '') or "sqlite:///Data/happiness.sqlite"
 
-# Save reference to the table
-happiness = Base.classes.happiness
+# Remove tracking modifications
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+from .models import Happy
+
 
 #################################################
 # Flask Setup
@@ -34,18 +34,8 @@ app = Flask(__name__)
 
 @app.route("/data")
 def welcome():
-    engine = create_engine("sqlite:///Data/happiness.sqlite")
-    conn = engine.connect()
-    session = Session(engine)
-    # reflect an existing database into a new model
-    Base = automap_base()
-    # reflect the tables
-    Base.prepare(engine, reflect=True)
-
-    # Save reference to the table
-    happiness = Base.classes.happiness
-    
-    results = session.query(happiness.country, happiness.rank, happiness.score, happiness.economy, happiness.family, happiness.health, happiness.freedom, happiness.generosity, happiness.trust, happiness.year, happiness.lat, happiness.long).all()
+ 
+    results = db.session.query(happiness.country, happiness.rank, happiness.score, happiness.economy, happiness.family, happiness.health, happiness.freedom, happiness.generosity, happiness.trust, happiness.year, happiness.lat, happiness.long).all()
     data_dict = {}
     data_list = []
     for  country, rank, score, economy, family, health, freedom, generosity, trust, year, lat, long in results:
