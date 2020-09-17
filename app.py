@@ -1,26 +1,6 @@
-import numpy as np
-import json
-import sqlalchemy
-from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.orm import Session
-from sqlalchemy import create_engine, func
-import datetime as dt
+from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, jsonify, render_template
 
-
-#################################################
-# Database Setup
-#################################################
-engine = create_engine("sqlite:///Data/happiness.sqlite")
-conn = engine.connect()
-session = Session(engine)
-# reflect an existing database into a new model
-Base = automap_base()
-# reflect the tables
-Base.prepare(engine, reflect=True)
-
-# Save reference to the table
-happiness = Base.classes.happiness
 
 #################################################
 # Flask Setup
@@ -28,24 +8,33 @@ happiness = Base.classes.happiness
 app = Flask(__name__)
 
 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data/happiness.sqlite'
+# Remove tracking modifications
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+from .models import happiness
+# u = Happy( country=country, rank=rank,score=score,economy=economy,family=family,health=health,freedom=freedom,generosity=generosity,trust=trust,year=year,lat=lat,long=long) 
+# db.session.add(u)
+# db.session.commit()
+
+
 #################################################
 # Flask Routes
 #################################################
 
-@app.route("/data")
-def welcome():
-    engine = create_engine("sqlite:///Data/happiness.sqlite")
-    conn = engine.connect()
-    session = Session(engine)
-    # reflect an existing database into a new model
-    Base = automap_base()
-    # reflect the tables
-    Base.prepare(engine, reflect=True)
 
-    # Save reference to the table
-    happiness = Base.classes.happiness
-    
-    results = session.query(happiness.country, happiness.rank, happiness.score, happiness.economy, happiness.family, happiness.health, happiness.freedom, happiness.generosity, happiness.trust, happiness.year, happiness.lat, happiness.long).all()
+
+@app.route("/data")
+def data():    
+
+    # u = Happy(index = index, country=country, rank=rank,score=score,economy=economy,family=family,health=health,freedom=freedom,generosity=generosity,trust=trust,year=year,lat=lat,long=long) 
+    # db.session.add(u)
+    # db.session.commit()
+    #results = db.session.query(country, rank, score,economy, family, health, freedom, generosity, trust, year, lat, long).all()
+
+    results = db.session.query(happiness.country, happiness.rank, happiness.score, happiness.economy, happiness.family, happiness.health, happiness.freedom, happiness.generosity, happiness.trust, happiness.year, happiness.lat, happiness.long).all()
     data_dict = {}
     data_list = []
     for  country, rank, score, economy, family, health, freedom, generosity, trust, year, lat, long in results:

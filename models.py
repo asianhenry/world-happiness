@@ -1,17 +1,17 @@
 from .app import db
 
 
-class Happy(db.Model):
+class happiness(db.Model):
     __tablename__ = "happiness" # required field  
-    index = db.Column(db.Integer, primary_key=True, nullable=False)
+    index = db.Column(db.Integer, primary_key=True)
     country = db.Column(db.String(100))
     rank = db.Column(db.Integer)
     score = db.Column(db.Float)
     economy = db.Column(db.Float)
     family = db.Column(db.Float)
     health = db.Column(db.Float)
-    freedom = db.Column(db.Float)
     generosity = db.Column(db.Float)
+    freedom = db.Column(db.Float)
     trust = db.Column(db.Float)
     year = db.Column(db.Integer)
     lat = db.Column(db.Float)
