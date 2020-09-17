@@ -17,7 +17,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-from .models import happiness
+from models import happiness
 # u = Happy( country=country, rank=rank,score=score,economy=economy,family=family,health=health,freedom=freedom,generosity=generosity,trust=trust,year=year,lat=lat,long=long) 
 # db.session.add(u)
 # db.session.commit()
