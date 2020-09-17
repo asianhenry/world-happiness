@@ -6,8 +6,13 @@ from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
 import datetime as dt
 from flask import Flask, jsonify, render_template
+import os
 
 
+#################################################
+# Flask Setup
+#################################################
+app = Flask(__name__)
 #################################################
 # Database Setup
 #################################################
@@ -19,13 +24,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-from .models import Happy
+from models import Happy
 
-
-#################################################
-# Flask Setup
-#################################################
-app = Flask(__name__)
 
 
 #################################################

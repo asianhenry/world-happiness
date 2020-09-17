@@ -16,3 +16,6 @@ class Happy(db.Model):
     year = db.Column(db.Integer)
     lat = db.Column(db.Float)
     long = db.Column(db.Float)
+
+    def __repr__(self):
+        return '<Happy %r>' % (self.name)
