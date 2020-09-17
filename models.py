@@ -3,7 +3,7 @@ from .app import db
 
 class Happy(db.Model):
     __tablename__ = "happiness" # required field  
-    index = db.Column(Integer, primary_key=True, nullable=False)
+    index = db.Column(db.Integer, primary_key=True, nullable=False)
     country = db.Column(db.String(100))
     rank = db.Column(db.Integer)
     score = db.Column(db.Float)

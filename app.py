@@ -6,26 +6,26 @@ from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
 import datetime as dt
 from flask import Flask, jsonify, render_template
-import os
 
+
+#################################################
+# Database Setup
+#################################################
+engine = create_engine("sqlite:///Data/happiness.sqlite")
+conn = engine.connect()
+session = Session(engine)
+# reflect an existing database into a new model
+Base = automap_base()
+# reflect the tables
+Base.prepare(engine, reflect=True)
+
+# Save reference to the table
+happiness = Base.classes.happiness
 
 #################################################
 # Flask Setup
 #################################################
 app = Flask(__name__)
-#################################################
-# Database Setup
-#################################################
-from flask_sqlalchemy import SQLAlchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '') or "sqlite:///Data/happiness.sqlite"
-
-# Remove tracking modifications
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
-
-from models import Happy
-
 
 
 #################################################
@@ -34,8 +34,18 @@ from models import Happy
 
 @app.route("/data")
 def welcome():
- 
-    results = db.session.query(happiness.country, happiness.rank, happiness.score, happiness.economy, happiness.family, happiness.health, happiness.freedom, happiness.generosity, happiness.trust, happiness.year, happiness.lat, happiness.long).all()
+    engine = create_engine("sqlite:///Data/happiness.sqlite")
+    conn = engine.connect()
+    session = Session(engine)
+    # reflect an existing database into a new model
+    Base = automap_base()
+    # reflect the tables
+    Base.prepare(engine, reflect=True)
+
+    # Save reference to the table
+    happiness = Base.classes.happiness
+    
+    results = session.query(happiness.country, happiness.rank, happiness.score, happiness.economy, happiness.family, happiness.health, happiness.freedom, happiness.generosity, happiness.trust, happiness.year, happiness.lat, happiness.long).all()
     data_dict = {}
     data_list = []
     for  country, rank, score, economy, family, health, freedom, generosity, trust, year, lat, long in results:
